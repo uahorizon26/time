@@ -1,16 +1,11 @@
-/*
- * Lampa plugin: "Скільки залишилось"
- * Коли інтерфейс плеєра зникає (через ~5 с бездіяльності), у правому нижньому
- * куті показується час до кінця фільму / серії: "35 хв" або "1:23 хв".
- * Не залежить від внутрішніх API Lampa — працює напряму з <video>.
- */
+/* Lampa plugin: time left until end of movie/episode (bottom right corner, shown when player UI is hidden) */
 (function () {
     'use strict';
 
     if (window.plugin_time_left_ready) return;
     window.plugin_time_left_ready = true;
 
-    var IDLE_MS = 5000;          // через скільки мс бездіяльності показувати лічильник
+    var IDLE_MS = 5000;          // idle time in ms before showing the counter
     var lastActivity = Date.now();
     var box = null;
 
@@ -39,10 +34,10 @@
     function format(sec) {
         var mins = Math.ceil(sec / 60);
         if (mins < 1) mins = 1;
-        if (mins < 60) return mins + ' хв';
+        if (mins < 60) return mins + ' \u0445\u0432';
         var h = Math.floor(mins / 60);
         var m = mins % 60;
-        return h + ':' + (m < 10 ? '0' : '') + m + ' хв';
+        return h + ':' + (m < 10 ? '0' : '') + m + ' \u0445\u0432';
     }
 
     function findVideo() {
@@ -54,7 +49,7 @@
         return null;
     }
 
-    // чи видно зараз панель плеєра (за обчислених стилями)
+    // is the player panel currently visible
     function panelVisible() {
         var els = document.querySelectorAll('.player-panel, .player-info');
         for (var i = 0; i < els.length; i++) {
